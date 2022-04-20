@@ -17,6 +17,8 @@ function validaNascimento(input){
     const dataMais18 = new Date(dataCadastrada.getUTCFullYear() + 18, dataCadastrada.getUTCMonth(), dataCadastrada.getUTCDate());
     const dataAtual = new Date();
 
+    console.log("alo galera");
+
     let mensagem = '';
 
     if(dataMais18 > dataAtual){
@@ -25,7 +27,3 @@ function validaNascimento(input){
 
     input.setCustomValidity(mensagem);
 }
-
-inputNascimento.addEventListener('blur', () => {
-    validaNascimento(inputNascimento);
-})
