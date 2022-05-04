@@ -79,7 +79,7 @@ function validaCPF (input){
     const cpfFormatado = input.value.replace(/\D/g, '');
     let mensagem = '';
 
-    if(!validaCpfRepetido(cpfFormatado)){
+    if(!validaCpfRepetido(cpfFormatado) || !validaCpfEstrutura(cpfFormatado)){
         mensagem = 'CPF digitado não é valido.'
     };
 
@@ -101,10 +101,6 @@ function validaCpfRepetido(cpf){
     ];
     let cpfValido = true;
 
-    if(cpf.length != 11){
-        cpfValido = false;
-    }
-
     valoresRepetidos.forEach(valor => {
         if(valor == cpf){
             cpfValido = false;
@@ -112,5 +108,40 @@ function validaCpfRepetido(cpf){
     })
 
     return cpfValido
+}
 
+function validaCpfEstrutura(cpf){
+    const multiplicador = 10;
+
+    return checaDigitoVerificador(cpf, multiplicador);
+
+}
+
+function checaDigitoVerificador(cpf, multiplicador){
+    if(multiplicador >= 12){
+        return true;
+    }
+
+    let multiplicadorInicial = multiplicador;
+    let soma = 0;
+    const cpfSemDigitos = cpf.substr(0, multiplicador - 1).split('');
+    const digitoVerificador = cpf.charAt(multiplicador - 1);
+    
+    for(var contador = 0; multiplicadorInicial > 1; multiplicadorInicial--){
+        soma = soma + cpfSemDigitos[contador] * multiplicadorInicial;
+        contador++
+        console.log(soma);
+    }
+
+    if((digitoVerificador == confirmaDigito(soma)) || (digitoVerificador == 0 && confirmaDigito(soma) == 10)){
+        
+        return checaDigitoVerificador(cpf, multiplicador + 1);
+    }
+
+    return false;
+
+}
+
+function confirmaDigito(soma){
+    return 11 - (soma % 11);
 }
