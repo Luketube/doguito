@@ -44,7 +44,8 @@ const mensagemErro = {
     },
     cep: {
         valueMissing:'O campo de CEP não pode estar vazio.',
-        patternMismatch:'CEP digitado não é valido.'
+        patternMismatch:'CEP digitado não é valido.',
+        customError: 'Cep digitado não foi encontrado.'
     },
     logradouro: {
         valueMissing: 'O campo de logradouro não pode estar vazio.'
@@ -175,8 +176,24 @@ function recuperaCEP(input){
             response => response.json()
         ).then(
             data => {
-                console.log(data);
+                if(data.erro){
+                    input.setCustomValidity('CEP digitado é invalido.');
+                    return
+                }
+                input.setCustomValidity('');
+                preencheCamposEndereco(data);
+                return;
             }
         )
-    }
+    }   
+}
+
+function preencheCamposEndereco(data){
+    const logradouro = document.querySelector('[data-tipo=logradouro]');
+    const cidade = document.querySelector('[data-tipo=cidade]');
+    const estado = document.querySelector('[data-tipo=estado]');
+
+    logradouro.value = data.logradouro;
+    cidade.value = data.localidade;
+    estado.value = data.uf;
 }
